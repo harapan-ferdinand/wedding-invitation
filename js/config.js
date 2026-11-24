@@ -74,7 +74,8 @@ window.WEDDING = {
   // Nomor WhatsApp untuk konfirmasi (format 62xxxx, tanpa +). Kosongkan bila tidak dipakai.
   whatsapp: "",
 
-  // Musik latar: instrumental "Inggir-Inggir" (vokal dihilangkan).
+  // Musik latar: lagu asli "Inggir-Inggir" (dengan vokal, tanpa diedit).
+  // Versi instrumental: "assets/inggir-inggir-instrumental.mp3"
   // Kosongkan ("") untuk memakai lagu bawaan "Horas Groove" yang disintesis di browser.
-  music: "assets/inggir-inggir-instrumental.mp3",
+  music: "assets/inggir-inggir.mp3",
 };
