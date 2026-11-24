@@ -7,12 +7,13 @@ motif gorga & ulos, sunburst, perangko, tiket, polaroid, dan film strip.
 - Sampul dengan nama tamu otomatis dari URL: `index.html?to=Pak+Harapan+%26+Keluarga`
 - Sampul amplop vintage dengan segel lilin — ketuk untuk membuka, nama tamu diketik ala mesin ketik
 - "Syalom & Horas!", ayat Matius 19 : 6, hitung mundur model flip, badge berputar, pita berjalan
-- Mempelai dalam polaroid yang bergoyang, acara Resepsi dalam bentuk tiket + peta Google Maps
+- Mempelai dalam polaroid yang bergoyang, acara Resepsi dalam bentuk tiket
+- Peta ilustrasi vintage (SVG, selalu tampil) dengan rumah adat Batak sebagai penanda; ketuk untuk membuka Google Maps
 - Kisah cinta sebagai kartu pos (bisa digeser), galeri film strip yang bergerak + lightbox
 - RSVP di kertas bergaris, ucapan tampil sebagai sticky notes (opsional diteruskan ke WhatsApp)
 - Kartu rekening retro dengan tombol salin, confetti, progress bar ulos
-- Musik: **Canon in D (Pachelbel)** versi music-box, disintesis di browser (domain publik) —
-  tombol piringan hitam di kanan bawah. Bisa diganti file MP3 sendiri lewat `music` di config.
+- Musik: **"Horas Groove"** — lagu orisinal retro-disco yang ceria (124 BPM), disintesis di browser
+  (bebas hak cipta) — tombol piringan hitam di kanan bawah. Bisa diganti MP3 sendiri lewat `music` di config.
 - Foto dummy dari Unsplash (bebas pakai); bila gagal dimuat tampil ilustrasi pengganti
 
 ## Cara mengubah data

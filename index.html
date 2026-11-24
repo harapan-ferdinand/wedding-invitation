@@ -153,17 +153,111 @@
             <p class="tr-addr" id="trAddr"></p>
           </div>
         </div>
-        <div class="route" aria-hidden="true">
-          <span class="r-start">🏠<small>Rumahmu</small></span>
-          <svg viewBox="0 0 300 40" preserveAspectRatio="none"><path id="routePath" d="M4 30C60 4 90 38 150 20S240 4 296 22"/></svg>
-          <span class="r-car">🚗</span>
-          <span class="r-end">💒<small>Pesta!</small></span>
-        </div>
-        <div class="tr-map">
-          <iframe id="mapEmbed" title="Peta lokasi Wisma Marindal" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-          <div class="folds" aria-hidden="true"></div>
-          <span class="tr-sticker" aria-hidden="true">📍 Di sini kita<br>berpesta!</span>
-        </div>
+        <a class="tr-map" id="mapLink" target="_blank" rel="noopener" aria-label="Peta ilustrasi lokasi Wisma Marindal — ketuk untuk membuka Google Maps">
+          <svg class="art-map" viewBox="0 0 600 400" role="img" aria-hidden="true">
+            <defs>
+              <pattern id="mgrid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#c9a467" stroke-opacity=".25"/></pattern>
+              <pattern id="sawah" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 8L8 0" stroke="#7aa35a" stroke-width="1.4"/></pattern>
+              <path id="carRoute" d="M78 318C130 300 175 262 232 246S290 228 300 222S352 220 384 226"/>
+            </defs>
+            <rect width="600" height="400" fill="#f7e5bb"/>
+            <rect width="600" height="400" fill="url(#mgrid)"/>
+            <!-- bukit / kontur -->
+            <g fill="none" stroke="#b98a4a" stroke-opacity=".35" stroke-width="1.5">
+              <path d="M20 90c40-40 110-40 140 0s-20 60-70 50-90-20-70-50z"/>
+              <path d="M40 92c25-22 75-22 95 2s-15 34-50 28-60-12-45-30z"/>
+              <path d="M470 60c30-30 90-20 100 15s-40 45-75 35-45-25-25-50z"/>
+            </g>
+            <!-- sawah -->
+            <g stroke="#5d7f43" stroke-width="1.5">
+              <rect x="430" y="300" width="56" height="40" rx="4" fill="#cfe3a6"/><rect x="430" y="300" width="56" height="40" rx="4" fill="url(#sawah)"/>
+              <rect x="40" y="200" width="70" height="44" rx="4" fill="#cfe3a6"/><rect x="40" y="200" width="70" height="44" rx="4" fill="url(#sawah)"/>
+            </g>
+            <!-- sungai -->
+            <path d="M610 130C540 150 520 110 470 130S430 190 470 230S520 300 480 330S450 380 470 410" fill="none" stroke="#2f7d79" stroke-opacity=".35" stroke-width="18" stroke-linecap="round"/>
+            <path class="river-flow" d="M610 130C540 150 520 110 470 130S430 190 470 230S520 300 480 330S450 380 470 410" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2" stroke-dasharray="6 14"/>
+            <!-- jalan -->
+            <g fill="none" stroke-linecap="round">
+              <path d="M300 -10C290 80 318 150 300 222S282 330 300 410" stroke="#221c18" stroke-width="24"/>
+              <path d="M300 -10C290 80 318 150 300 222S282 330 300 410" stroke="#fff9ee" stroke-width="18"/>
+              <path d="M300 -10C290 80 318 150 300 222S282 330 300 410" stroke="#f2b33d" stroke-width="2" stroke-dasharray="10 10"/>
+              <path d="M-10 312C60 318 110 290 160 268S250 236 300 222S350 220 390 226" stroke="#221c18" stroke-width="16"/>
+              <path d="M-10 312C60 318 110 290 160 268S250 236 300 222S350 220 390 226" stroke="#fff9ee" stroke-width="11"/>
+            </g>
+            <!-- pohon & rumah kecil -->
+            <g class="trees">
+              <g transform="translate(200 120)"><rect x="-2" y="0" width="4" height="12" fill="#7d4a1f"/><circle r="12" fill="#5d7f43" stroke="#221c18" stroke-width="2"/></g>
+              <g transform="translate(232 150)"><rect x="-2" y="0" width="4" height="10" fill="#7d4a1f"/><circle r="9" fill="#7aa35a" stroke="#221c18" stroke-width="2"/></g>
+              <g transform="translate(380 120)"><rect x="-2" y="0" width="4" height="12" fill="#7d4a1f"/><circle r="12" fill="#7aa35a" stroke="#221c18" stroke-width="2"/></g>
+              <g transform="translate(520 240)"><rect x="-2" y="0" width="4" height="12" fill="#7d4a1f"/><circle r="11" fill="#5d7f43" stroke="#221c18" stroke-width="2"/></g>
+              <g transform="translate(160 350)"><rect x="-2" y="0" width="4" height="12" fill="#7d4a1f"/><circle r="12" fill="#5d7f43" stroke="#221c18" stroke-width="2"/></g>
+              <g transform="translate(370 330)"><rect x="-2" y="0" width="4" height="10" fill="#7d4a1f"/><circle r="9" fill="#7aa35a" stroke="#221c18" stroke-width="2"/></g>
+            </g>
+            <g stroke="#221c18" stroke-width="2">
+              <g transform="translate(150 175)"><rect x="-12" y="-6" width="24" height="16" fill="#fff9ee"/><path d="M-16-6L0-18 16-6z" fill="#e8743b"/></g>
+              <g transform="translate(240 320)"><rect x="-12" y="-6" width="24" height="16" fill="#fff9ee"/><path d="M-16-6L0-18 16-6z" fill="#2f7d79"/></g>
+              <g transform="translate(360 290)"><rect x="-10" y="-5" width="20" height="14" fill="#fff9ee"/><path d="M-14-5L0-16 14-5z" fill="#c8312b"/></g>
+            </g>
+            <!-- awan -->
+            <g class="cloud" fill="#fff9ee" stroke="#221c18" stroke-width="2">
+              <path d="M60 40a14 14 0 0 1 26-6a12 12 0 0 1 20 10h-56a10 10 0 0 1 10-4z"/>
+            </g>
+            <g class="cloud c2" fill="#fff9ee" stroke="#221c18" stroke-width="2">
+              <path d="M380 30a14 14 0 0 1 26-6a12 12 0 0 1 20 10h-56a10 10 0 0 1 10-4z"/>
+            </g>
+            <!-- arah utara -->
+            <g transform="translate(300 28)">
+              <rect x="-100" y="-16" width="200" height="30" rx="15" fill="#221c18"/>
+              <text class="m-label light" y="5">▲ Pusat Kota Medan</text>
+            </g>
+            <!-- rute -->
+            <use href="#carRoute" class="route-line"/>
+            <g transform="translate(70 322)">
+              <circle r="15" fill="#fff9ee" stroke="#221c18" stroke-width="2"/>
+              <path d="M-8 4V-2L0-9 8-2V4z" fill="#2f7d79" stroke="#221c18" stroke-width="1.6"/>
+              <text class="m-hand" y="36">Rumahmu</text>
+            </g>
+            <g class="car">
+              <g transform="translate(-13 -9)">
+                <rect x="0" y="5" width="26" height="10" rx="4" fill="#c8312b" stroke="#221c18" stroke-width="1.8"/>
+                <path d="M5 5L8 0H18L21 5" fill="#f2b33d" stroke="#221c18" stroke-width="1.8"/>
+                <circle cx="7" cy="16" r="3" fill="#221c18"/><circle cx="19" cy="16" r="3" fill="#221c18"/>
+              </g>
+              <animateMotion dur="6s" repeatCount="indefinite" rotate="auto"><mpath href="#carRoute"/></animateMotion>
+            </g>
+            <!-- lokasi: rumah adat Batak -->
+            <g transform="translate(436 214)">
+              <circle class="ripple" r="30" fill="none" stroke="#c8312b" stroke-width="3"/>
+              <circle class="ripple r2" r="30" fill="none" stroke="#c8312b" stroke-width="3"/>
+              <ellipse cy="40" rx="52" ry="8" fill="#221c18" opacity=".18"/>
+              <g stroke="#221c18" stroke-width="2.2" stroke-linejoin="round">
+                <path d="M-24 22V40M-8 22V40M8 22V40M24 22V40" />
+                <rect x="-34" y="0" width="68" height="24" fill="#7d1f1f"/>
+                <path d="M-34 0h68v8h-68z" fill="#fff9ee"/>
+                <path d="M-30 8l6 8 6-8 6 8 6-8 6 8 6-8 6 8 6-8 6 8 6-8" fill="none" stroke="#fff9ee" stroke-width="2"/>
+                <path d="M-56-58C-30-30 30-30 56-58L40 0H-40z" fill="#c8312b"/>
+                <path d="M-46-44C-20-22 20-22 46-44" fill="none" stroke="#f2b33d" stroke-width="2"/>
+                <path d="M-14-6l14-18 14 18z" fill="#fff9ee"/>
+                <circle cx="0" cy="-12" r="3" fill="#221c18"/>
+              </g>
+              <g class="pin">
+                <path d="M0-74c-14 0-24 10-24 23 0 17 24 37 24 37s24-20 24-37c0-13-10-23-24-23z" fill="#c8312b" stroke="#221c18" stroke-width="2.5"/>
+                <circle cy="-52" r="8" fill="#fff9ee" stroke="#221c18" stroke-width="2"/>
+              </g>
+              <g transform="translate(0 66)">
+                <rect x="-96" y="-18" width="192" height="34" rx="5" fill="#f2b33d" stroke="#221c18" stroke-width="2.2"/>
+                <text class="m-label" y="6" id="mapVenueLabel">Wisma Marindal</text>
+              </g>
+            </g>
+            <!-- kompas -->
+            <g transform="translate(548 352)">
+              <circle r="30" fill="#fff9ee" stroke="#221c18" stroke-width="2.5"/>
+              <g class="needle"><path d="M0-24l6 24-6 24-6-24z" fill="#221c18"/><path d="M0-24l6 24h-6z" fill="#c8312b"/></g>
+              <text class="m-label" y="-33" style="font-size:11px">U</text>
+            </g>
+            <text class="m-small" x="14" y="390">peta ilustrasi · bukan skala · ketuk untuk navigasi</text>
+          </svg>
+        </a>
         <div class="tr-actions">
           <a class="btn btn-red" id="mapsBtn" target="_blank" rel="noopener">🧭 Buka Google Maps</a>
           <button class="btn btn-mustard" type="button" id="copyMaps">🔗 Salin Link Lokasi</button>
