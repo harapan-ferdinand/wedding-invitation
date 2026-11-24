@@ -12,8 +12,9 @@ motif gorga & ulos, sunburst, perangko, tiket, polaroid, dan film strip.
 - Kisah cinta sebagai kartu pos (bisa digeser), galeri film strip yang bergerak + lightbox
 - RSVP di kertas bergaris, ucapan tampil sebagai sticky notes (opsional diteruskan ke WhatsApp)
 - Kartu rekening retro dengan tombol salin, confetti, progress bar ulos
-- Musik: **"Horas Groove"** — lagu orisinal retro-disco yang ceria (124 BPM), disintesis di browser
-  (bebas hak cipta) — tombol piringan hitam di kanan bawah. Bisa diganti MP3 sendiri lewat `music` di config.
+- Musik: instrumental **"Inggir-Inggir"** (`assets/inggir-inggir-instrumental.mp3`, vokal dihilangkan
+  dengan Demucs) — tombol piringan hitam di kanan bawah. Kosongkan `music` di config untuk kembali ke
+  lagu bawaan "Horas Groove" (disintesis di browser).
 - Foto dummy dari Unsplash (bebas pakai); bila gagal dimuat tampil ilustrasi pengganti
 
 ## Cara mengubah data

@@ -74,7 +74,7 @@ window.WEDDING = {
   // Nomor WhatsApp untuk konfirmasi (format 62xxxx, tanpa +). Kosongkan bila tidak dipakai.
   whatsapp: "",
 
-  // Musik: kosongkan untuk memakai "Canon in D" (Pachelbel) versi music-box bawaan.
-  // Bila punya file lagu sendiri: "assets/lagu.mp3"
-  music: "",
+  // Musik latar: instrumental "Inggir-Inggir" (vokal dihilangkan).
+  // Kosongkan ("") untuk memakai lagu bawaan "Horas Groove" yang disintesis di browser.
+  music: "assets/inggir-inggir-instrumental.mp3",
 };
