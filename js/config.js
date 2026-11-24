@@ -1,74 +1,79 @@
 /*
  * ============================================================
- *  KONFIGURASI UNDANGAN
- *  Ubah data di bawah ini sesuai detail acara yang sebenarnya.
- *  Semua teks di halaman diambil dari sini.
+ *  KONFIGURASI UNDANGAN — ubah data di sini saja.
+ *  Bagian bertanda TODO masih berupa contoh / placeholder.
  * ============================================================
  */
 window.WEDDING = {
   couple: {
     short: "Dimar & Septian",
-    bride: {
-      nickname: "Dimar",
-      fullName: "Dimar Ayu Lestari, S.Pd.",          // TODO: ganti nama lengkap
-      parents: "Putri dari Bapak Fulan & Ibu Fulanah", // TODO
-      instagram: "",                                   // contoh: "dimar.ayu" (opsional)
-      photo: "",                                       // contoh: "assets/dimar.jpg" (opsional)
-    },
     groom: {
       nickname: "Septian",
-      fullName: "Septian Pratama, S.T.",               // TODO
-      parents: "Putra dari Bapak Fulan & Ibu Fulanah", // TODO
+      fullName: "Septian [Marga]",                                  // TODO nama lengkap + marga
+      parents: "Putra dari Bapak [Nama Ayah] & Ibu [Nama Ibu] br. [Marga]", // TODO
       instagram: "",
-      photo: "",
+      // Foto dummy (Unsplash). Ganti dengan "assets/septian.jpg"
+      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=700&q=80&auto=format&fit=crop",
+    },
+    bride: {
+      nickname: "Dimar",
+      fullName: "Dimar br. [Marga]",                                // TODO
+      parents: "Putri dari Bapak [Nama Ayah] & Ibu [Nama Ibu] br. [Marga]", // TODO
+      instagram: "",
+      photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=700&q=80&auto=format&fit=crop",
     },
   },
 
-  // Tanggal utama (dipakai untuk hitung mundur). Format ISO dengan zona waktu.
-  date: "2026-12-20T08:00:00+07:00", // TODO
+  // Tanggal utama untuk hitung mundur (WIB)
+  date: "2027-12-23T10:00:00+07:00",
 
   events: [
     {
-      name: "Akad Nikah",
-      date: "2026-12-20T08:00:00+07:00",
-      end: "2026-12-20T10:00:00+07:00",
-      timeLabel: "08.00 – 10.00 WIB",
-      venue: "Kediaman Mempelai Wanita",
-      address: "Jl. Melati No. 12, Kel. Sukamaju, Kota Bandung", // TODO
-      maps: "https://maps.google.com/?q=Bandung",                 // TODO
-    },
-    {
-      name: "Resepsi",
-      date: "2026-12-20T11:00:00+07:00",
-      end: "2026-12-20T14:00:00+07:00",
-      timeLabel: "11.00 – 14.00 WIB",
-      venue: "Gedung Serbaguna Al-Ikhlas",
-      address: "Jl. Mawar No. 45, Kota Bandung",
-      maps: "https://maps.google.com/?q=Bandung",
+      name: "Resepsi Pernikahan",
+      date: "2027-12-23T10:00:00+07:00",
+      end: "2027-12-23T16:00:00+07:00",   // dipakai untuk kalender saja
+      timeLabel: "10.00 WIB – Selesai",
+      venue: "Wisma Marindal",
+      address: "Marindal, Medan – Sumatera Utara", // TODO lengkapi alamat jalan
+      mapsQuery: "Wisma Marindal",
     },
   ],
+
+  verse: {
+    text: "Demikianlah mereka bukan lagi dua, melainkan satu. Karena itu, apa yang telah dipersatukan Allah, tidak boleh diceraikan manusia.",
+    ref: "Matius 19 : 6",
+  },
 
   story: [
-    { year: "2019", title: "Pertama Bertemu", text: "Allah mempertemukan kami dalam sebuah kegiatan kampus. Sapaan sederhana yang tak disangka menjadi awal segalanya." },
-    { year: "2022", title: "Saling Mengenal", text: "Waktu mengajarkan kami untuk saling memahami, menguatkan, dan tumbuh bersama dalam kebaikan." },
-    { year: "2025", title: "Lamaran", text: "Dengan restu kedua keluarga, kami mengikat niat baik dalam sebuah acara lamaran yang hangat." },
-    { year: "2026", title: "Hari Bahagia", text: "Bismillah, kami melangkah ke jenjang pernikahan untuk menyempurnakan separuh agama." },
+    { year: "2019", title: "Pertama Bertemu", text: "Tuhan mempertemukan kami di tempat yang tak terduga. Satu sapaan sederhana menjadi awal cerita panjang." },
+    { year: "2022", title: "Bertumbuh Bersama", text: "Dalam suka dan duka kami belajar saling memahami, menguatkan, dan bertumbuh dalam iman." },
+    { year: "2026", title: "Marhusip & Lamaran", text: "Dengan restu kedua keluarga besar, kami menyatukan niat baik menuju pernikahan kudus." },
+    { year: "2027", title: "Hari Bahagia", text: "Atas kasih karunia Tuhan, kami melangkah bersama membangun keluarga yang diberkati." },
   ],
 
-  // Daftar foto galeri. Kosongkan untuk memakai ilustrasi bawaan.
+  // Foto galeri dummy (Unsplash). Ganti dengan foto sendiri, mis. "assets/g1.jpg"
   gallery: [
-    // "assets/gallery-1.jpg",
+    "https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1606800052052-a08af7148866?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=900&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?w=900&q=80&auto=format&fit=crop",
   ],
 
+  // Rekening — PLACEHOLDER, akan diisi kemudian
   gifts: [
-    { bank: "BCA", number: "1234567890", holder: "Dimar Ayu Lestari" },     // TODO
-    { bank: "Mandiri", number: "0987654321", holder: "Septian Pratama" },   // TODO
+    { bank: "NAMA BANK", number: "0000 0000 0000", holder: "Nama Pemilik Rekening" }, // TODO
+    { bank: "NAMA BANK", number: "0000 0000 0000", holder: "Nama Pemilik Rekening" }, // TODO
   ],
-  giftAddress: "Jl. Melati No. 12, Kel. Sukamaju, Kota Bandung", // alamat kirim kado
+  giftAddress: "[Alamat pengiriman kado]", // TODO
 
-  // Nomor WhatsApp untuk konfirmasi kehadiran (format internasional, tanpa +)
-  whatsapp: "", // contoh: "6281234567890"
+  // Nomor WhatsApp untuk konfirmasi (format 62xxxx, tanpa +). Kosongkan bila tidak dipakai.
+  whatsapp: "",
 
-  // Musik latar (opsional). Contoh: "assets/music.mp3"
+  // Musik: kosongkan untuk memakai "Canon in D" (Pachelbel) versi music-box bawaan.
+  // Bila punya file lagu sendiri: "assets/lagu.mp3"
   music: "",
 };

@@ -4,178 +4,202 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // ---------- tanggal (selalu WIB) ----------
   const MONTHS = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
   const DAYS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-  // Format dates in WIB regardless of the viewer's timezone.
-  function parts(iso) {
+  const parts = (iso) => {
     const d = new Date(new Date(iso).getTime() + 7 * 3600e3);
-    return { day: DAYS[d.getUTCDay()], date: d.getUTCDate(), month: MONTHS[d.getUTCMonth()], year: d.getUTCFullYear() };
-  }
-  const main = parts(C.date);
+    return { day: DAYS[d.getUTCDay()], date: d.getUTCDate(), m: d.getUTCMonth(), month: MONTHS[d.getUTCMonth()], year: d.getUTCFullYear() };
+  };
+  const P = parts(C.date);
+  const pad = (n) => String(n).padStart(2, "0");
   const binds = {
     "couple.short": C.couple.short,
     "bride.nickname": C.couple.bride.nickname,
     "groom.nickname": C.couple.groom.nickname,
-    dateLong: `${main.day}, ${main.date} ${main.month} ${main.year}`,
+    dateLong: `${P.day}, ${P.date} ${P.month} ${P.year}`,
+    dateShort: `${P.day.toUpperCase()} · ${P.date} ${P.month.toUpperCase()} ${P.year}`,
+    dateDots: `${pad(P.date)}.${pad(P.m + 1)}.${String(P.year).slice(2)}`,
   };
   $$("[data-bind]").forEach((el) => { if (binds[el.dataset.bind]) el.textContent = binds[el.dataset.bind]; });
-  document.title = `Undangan Pernikahan ${C.couple.short}`;
+  $("#badgeText").textContent = `HORAS · ${binds.dateDots} · SAVE THE DATE · ${binds.dateDots} · `;
+  document.title = `The Wedding of ${C.couple.short}`;
 
-  // ---------- guest name from ?to= ----------
-  const params = new URLSearchParams(location.search);
-  const guest = (params.get("to") || "").trim().slice(0, 80);
-  if (guest) {
-    $("#guestName").textContent = guest;
-    $("#rsvpName").value = guest;
+  // ---------- nama tamu (?to=) dengan efek mesin ketik ----------
+  const guest = (new URLSearchParams(location.search).get("to") || "").trim().slice(0, 80) || "Tamu Undangan";
+  const gEl = $("#guestName");
+  if (guest !== "Tamu Undangan") $("#rsvpName").value = guest;
+  if (reduced) gEl.textContent = guest;
+  else {
+    gEl.textContent = ""; gEl.classList.add("typing");
+    let i = 0;
+    setTimeout(function type() {
+      gEl.textContent = guest.slice(0, ++i);
+      if (i < guest.length) setTimeout(type, 55 + Math.random() * 60);
+      else setTimeout(() => gEl.classList.remove("typing"), 1200);
+    }, 900);
   }
 
-  // ---------- open invitation ----------
+  // ---------- musik ----------
   const audio = $("#bgm");
-  const musicBtn = $("#musicBtn");
-  if (C.music) { audio.src = C.music; musicBtn.hidden = false; }
-  function setPlaying(p) { musicBtn.classList.toggle("playing", p); }
-  musicBtn.addEventListener("click", () => {
-    if (audio.paused) audio.play().then(() => setPlaying(true)).catch(() => {});
-    else { audio.pause(); setPlaying(false); }
+  const vinyl = $("#musicBtn");
+  const player = C.music
+    ? { play: () => { if (!audio.src) audio.src = C.music; return audio.play(); }, pause: () => audio.pause(), get playing() { return !audio.paused; } }
+    : window.MusicBox;
+  const setVinyl = () => vinyl.classList.toggle("playing", player.playing);
+  vinyl.addEventListener("click", () => {
+    if (player.playing) { player.pause(); setVinyl(); }
+    else player.play().then(setVinyl).catch(() => {});
   });
 
+  // ---------- buka amplop ----------
   $("#openBtn").addEventListener("click", () => {
-    $("#cover").classList.add("opened");
-    document.body.classList.remove("locked");
-    window.scrollTo(0, 0);
-    if (C.music) audio.play().then(() => setPlaying(true)).catch(() => {});
-    startPetals();
-    setTimeout(() => $("#cover").remove(), 1300);
+    $("#envelope").classList.add("open");
+    player.play().then(setVinyl).catch(() => {});
+    setTimeout(() => {
+      $("#cover").classList.add("gone");
+      document.body.classList.remove("locked");
+      window.scrollTo(0, 0);
+      burst();
+    }, reduced ? 0 : 1900);
+    setTimeout(() => $("#cover").remove(), 3000);
   });
 
-  // ---------- countdown ----------
+  // ---------- hitung mundur ----------
   const target = new Date(C.date).getTime();
+  const cd = { d: $("#cd-d"), h: $("#cd-h"), m: $("#cd-m"), s: $("#cd-s") };
+  const set = (el, v) => { if (el.textContent !== v) { el.textContent = v; el.classList.remove("tick"); void el.offsetWidth; el.classList.add("tick"); } };
   function tick() {
-    let diff = Math.max(0, target - Date.now());
-    const d = Math.floor(diff / 864e5); diff -= d * 864e5;
-    const h = Math.floor(diff / 36e5); diff -= h * 36e5;
-    const m = Math.floor(diff / 6e4); diff -= m * 6e4;
-    const s = Math.floor(diff / 1e3);
-    $("#cd-d").textContent = d;
-    $("#cd-h").textContent = String(h).padStart(2, "0");
-    $("#cd-m").textContent = String(m).padStart(2, "0");
-    $("#cd-s").textContent = String(s).padStart(2, "0");
+    let t = Math.max(0, target - Date.now());
+    const d = Math.floor(t / 864e5); t -= d * 864e5;
+    const h = Math.floor(t / 36e5); t -= h * 36e5;
+    const m = Math.floor(t / 6e4); t -= m * 6e4;
+    set(cd.d, String(d)); set(cd.h, pad(h)); set(cd.m, pad(m)); set(cd.s, pad(Math.floor(t / 1e3)));
   }
   tick(); setInterval(tick, 1000);
 
-  // ---------- calendar link ----------
-  const gcal = (ev) => {
+  // ---------- kalender & peta ----------
+  const ev = C.events[0];
+  const mapsLink = (e) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.mapsQuery || e.venue)}`;
+  const gcal = (e) => {
     const f = (iso) => new Date(iso).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-    const q = new URLSearchParams({
-      action: "TEMPLATE",
-      text: `${ev.name} ${C.couple.short}`,
-      dates: `${f(ev.date)}/${f(ev.end || ev.date)}`,
-      location: `${ev.venue}, ${ev.address}`,
-      details: `Undangan pernikahan ${C.couple.short}`,
+    return "https://calendar.google.com/calendar/render?" + new URLSearchParams({
+      action: "TEMPLATE", text: `${e.name} ${C.couple.short}`, dates: `${f(e.date)}/${f(e.end || e.date)}`,
+      location: `${e.venue}, ${e.address}`, details: `Undangan ${e.name} ${C.couple.short}. ${location.href.split("?")[0]}`,
     });
-    return `https://calendar.google.com/calendar/render?${q}`;
   };
-  $("#calBtn").href = gcal({ ...C.events[0], end: C.events[C.events.length - 1].end });
+  $("#calBtn").href = gcal(ev);
+  $("#mapEmbed").src = `https://maps.google.com/maps?q=${encodeURIComponent(ev.mapsQuery || ev.venue)}&z=15&output=embed`;
 
-  // ---------- couple ----------
+  // ---------- ayat ----------
+  $("#verseText").textContent = `“${C.verse.text}”`;
+  $("#verseRef").textContent = C.verse.ref;
+
+  // ---------- foto dengan cadangan ----------
+  const FALLBACK = ["#c8312b", "#2f7d79", "#7d1f1f", "#e8743b", "#221c18"];
+  window.__imgFail = (img, label) => {
+    const i = Math.abs([...label].reduce((a, c) => a + c.charCodeAt(0), 0)) % FALLBACK.length;
+    img.outerHTML = `<div class="fallback-art" style="background:${FALLBACK[i]}">${esc(label)}</div>`;
+  };
+  const photo = (src, alt, label) =>
+    `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" onerror="__imgFail(this, '${esc(label).replace(/'/g, "")}')">`;
+
+  // ---------- mempelai ----------
   function person(p, role) {
-    const pic = p.photo
-      ? `<img src="${esc(p.photo)}" alt="${esc(p.fullName)}" loading="lazy">`
-      : `<span class="initial">${esc(p.nickname.charAt(0))}</span>`;
-    const ig = p.instagram ? `<a class="ig" href="https://instagram.com/${encodeURIComponent(p.instagram)}" target="_blank" rel="noopener">@${esc(p.instagram)}</a>` : "";
-    return `<div class="portrait">${pic}</div>
-      <p class="eyebrow">${role}</p>
-      <h3 class="nick">${esc(p.nickname)}</h3>
-      <p class="full">${esc(p.fullName)}</p>
-      <p class="parents">${esc(p.parents)}</p>${ig}`;
+    const ig = p.instagram ? `<a class="btn btn-mustard small ig" href="https://instagram.com/${encodeURIComponent(p.instagram)}" target="_blank" rel="noopener">@${esc(p.instagram)}</a>` : "";
+    return `<div class="polaroid reveal pop"><span class="pin"></span>
+        <div class="pic">${p.photo ? photo(p.photo, p.fullName, p.nickname.charAt(0)) : `<div class="fallback-art" style="background:var(--red)">${esc(p.nickname.charAt(0))}</div>`}</div>
+        <span class="cap">${esc(p.nickname)} ♥</span></div>
+      <p class="role reveal">${role}</p>
+      <h3 class="full reveal">${esc(p.fullName)}</h3>
+      <p class="parents reveal">${esc(p.parents)}</p>${ig}`;
   }
-  $("#bride").innerHTML = person(C.couple.bride, "Mempelai Wanita");
   $("#groom").innerHTML = person(C.couple.groom, "Mempelai Pria");
+  $("#bride").innerHTML = person(C.couple.bride, "Mempelai Wanita");
 
-  // ---------- events ----------
-  $("#events").innerHTML = C.events.map((ev) => {
-    const p = parts(ev.date);
-    return `<article class="card event-card reveal">
-      <h3>${esc(ev.name)}</h3>
-      <div class="event-big">
-        <span class="side">${p.day}</span><span class="num">${p.date}</span><span class="side">${p.month}<br>${p.year}</span>
+  // ---------- tiket acara ----------
+  $("#events").innerHTML = C.events.map((e, i) => {
+    const p = parts(e.date);
+    return `<article class="ticket reveal pop">
+      <div class="ticket-main">
+        <div class="ticket-band"></div>
+        <p class="kicker" style="text-align:left">Admit · Tamu Kehormatan</p>
+        <h3>${esc(e.name)}</h3>
+        <div class="when"><span class="day-num">${p.date}</span>
+          <span class="day-meta">${p.day}<br>${p.month}<br>${p.year}</span></div>
+        <span class="time">⏰ ${esc(e.timeLabel)}</span>
+        <p class="venue">📍 ${esc(e.venue)}</p>
+        <p class="addr">${esc(e.address)}</p>
+        <div class="actions">
+          <a class="btn btn-red small" href="${mapsLink(e)}" target="_blank" rel="noopener">Buka Google Maps</a>
+          <a class="btn btn-mustard small" href="${esc(gcal(e))}" target="_blank" rel="noopener">＋ Kalender</a>
+        </div>
       </div>
-      <p class="event-day">Pukul ${esc(ev.timeLabel)}</p>
-      <p class="venue">${esc(ev.venue)}</p>
-      <p class="addr">${esc(ev.address)}</p>
-      <a class="btn btn-small" href="${esc(ev.maps)}" target="_blank" rel="noopener">Lihat Lokasi</a>
-      <a class="btn btn-small" href="${esc(gcal(ev))}" target="_blank" rel="noopener">+ Kalender</a>
+      <div class="ticket-stub"><span class="stub-text">HORAS · No. ${pad(p.date)}${pad(p.m + 1)}${i + 1}</span><span class="barcode"></span></div>
     </article>`;
   }).join("");
 
-  // ---------- story ----------
-  $("#timeline").innerHTML = C.story.map((s) =>
-    `<li class="reveal"><span class="yr">${esc(s.year)}</span><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></li>`
-  ).join("");
+  // ---------- kisah (kartu pos) ----------
+  $("#postcards").innerHTML = C.story.map((s, i) =>
+    `<article class="postcard reveal" style="transition-delay:${i * 0.12}s">
+      <div class="pc-stamp">${esc(s.year)}</div>
+      <p class="pc-label">KARTU POS · BAB ${i + 1}</p>
+      <h3>${esc(s.title)}</h3>
+      <p>${esc(s.text)}</p>
+      <span class="pc-band"></span>
+    </article>`).join("");
 
-  // ---------- gallery ----------
-  const palettes = [["#1b4d43", "#0b2a24"], ["#c9a45c", "#9c7a36"], ["#2a6457", "#123b33"], ["#e8d3a2", "#c9a45c"], ["#123b33", "#2a6457"], ["#9c7a36", "#1b4d43"]];
-  const motifs = [
-    '<path d="M50 85S15 62 15 38a17 17 0 0135-6 17 17 0 0135 6c0 24-35 47-35 47z"/>',
-    '<circle cx="40" cy="50" r="22"/><circle cx="60" cy="50" r="22"/>',
-    '<path d="M50 10l10 30 30 10-30 10-10 30-10-30-30-10 30-10z"/>',
-    '<path d="M20 80V40a30 30 0 0160 0v40z"/><path d="M50 18v62"/>',
-    '<path d="M50 20c-8 14-8 30 0 60 8-30 8-46 0-60zM20 50c14-8 30-8 60 0-30 8-46 8-60 0z"/>',
-    '<path d="M30 30h40v40H30z" transform="rotate(45 50 50)"/><circle cx="50" cy="50" r="8"/>',
-  ];
-  const art = (i) => {
-    const [a, b] = palettes[i % palettes.length];
-    return `<div class="art" style="background:linear-gradient(150deg,${a},${b})"><svg viewBox="0 0 100 100" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4">${motifs[i % motifs.length]}</svg></div>`;
-  };
-  const photos = C.gallery && C.gallery.length ? C.gallery : null;
-  const n = photos ? photos.length : 6;
-  $("#galleryGrid").innerHTML = Array.from({ length: n }, (_, i) =>
-    `<div class="tile reveal" data-i="${i}" tabindex="0" role="button" aria-label="Lihat foto ${i + 1}">${photos ? `<img src="${esc(photos[i])}" alt="Foto ${i + 1}" loading="lazy">` : art(i)}</div>`
-  ).join("");
+  // ---------- galeri film ----------
+  const frames = (list, offset) => list.map((src, i) =>
+    `<button class="frame" data-src="${esc(src)}" aria-label="Lihat foto ${i + 1}">${photo(src, "Foto " + (i + 1), "♥")}</button>`).join("");
+  const g = C.gallery;
+  const half = Math.ceil(g.length / 2);
+  const a = g.slice(0, half), b = g.slice(half).concat(g.slice(0, Math.max(0, half - (g.length - half))));
+  $("#film1").innerHTML = frames(a) + frames(a) + frames(a) + frames(a);
+  $("#film2").innerHTML = frames(b) + frames(b) + frames(b) + frames(b);
   const lb = $("#lightbox");
-  const openLb = (i) => { $(".lb-content", lb).innerHTML = photos ? `<img src="${esc(photos[i])}" alt="">` : art(i); lb.hidden = false; };
-  $$(".tile").forEach((t) => {
-    t.addEventListener("click", () => openLb(+t.dataset.i));
-    t.addEventListener("keydown", (e) => { if (e.key === "Enter") openLb(+t.dataset.i); });
+  document.addEventListener("click", (e) => {
+    const f = e.target.closest(".frame");
+    if (f) { $(".lb-content", lb).innerHTML = `<img src="${esc(f.dataset.src)}" alt="">`; lb.hidden = false; }
   });
   lb.addEventListener("click", (e) => { if (e.target === lb || e.target.tagName === "BUTTON") lb.hidden = true; });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") lb.hidden = true; });
 
-  // ---------- gifts ----------
-  $("#gifts").innerHTML = C.gifts.map((g, i) => `
-    <div class="bank-card reveal">
-      <div class="chip"></div><span class="bank">${esc(g.bank)}</span>
-      <p class="no" id="acc${i}">${esc(g.number)}</p>
-      <div class="row"><span class="holder">a.n. ${esc(g.holder)}</span>
-      <button class="btn btn-small" data-copy-target="acc${i}">Salin</button></div>
+  // ---------- hadiah ----------
+  $("#gifts").innerHTML = C.gifts.map((x, i) => `
+    <div class="bank-card reveal pop">
+      <span class="sun"></span><span class="band"></span>
+      <span class="bank">${esc(x.bank)}</span>
+      <span class="chip"></span>
+      <p class="no" id="acc${i}">${esc(x.number)}</p>
+      <div class="row"><span class="holder">a.n. ${esc(x.holder)}</span>
+        <button class="btn ${i % 2 ? "btn-mustard" : "btn-ink"} small" data-copy-target="acc${i}">Salin</button></div>
     </div>`).join("");
   $("#giftAddress").textContent = C.giftAddress;
 
   const toast = (msg) => {
     const t = $("#toast"); t.textContent = msg; t.classList.add("show");
-    clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 2200);
+    clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2200);
   };
   document.addEventListener("click", (e) => {
-    const b = e.target.closest("[data-copy-target]");
-    if (!b) return;
-    const text = $("#" + b.dataset.copyTarget).textContent.trim();
-    const done = () => toast("Berhasil disalin ✓");
-    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
-    else fallbackCopy(text, done);
+    const btn = e.target.closest("[data-copy-target]");
+    if (!btn) return;
+    const text = $("#" + btn.dataset.copyTarget).textContent.replace(/\s+/g, btn.dataset.copyTarget.startsWith("acc") ? "" : " ").trim();
+    const done = () => toast("Tersalin ✓ Mauliate!");
+    const fallback = () => { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); done(); } catch (_) {} ta.remove(); };
+    navigator.clipboard ? navigator.clipboard.writeText(text).then(done, fallback) : fallback();
   });
-  function fallbackCopy(text, cb) {
-    const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta);
-    ta.select(); try { document.execCommand("copy"); cb(); } catch (_) {} ta.remove();
-  }
 
-  // ---------- RSVP & wishes ----------
+  // ---------- RSVP & ucapan ----------
   const KEY = "wishes:" + C.couple.short;
   const seed = [
-    { name: "Keluarga Besar", attend: "Hadir", message: "Barakallahu lakuma wa baraka 'alaikuma wa jama'a bainakuma fii khair. Semoga menjadi keluarga sakinah, mawaddah, warahmah.", at: Date.now() - 864e5 },
+    { name: "Keluarga Besar", attend: "Hadir", message: "Selamat menempuh hidup baru! Kiranya Tuhan Yesus memberkati rumah tangga kalian. Horas!", at: Date.now() - 2 * 864e5 },
+    { name: "Sahabat", attend: "Hadir", message: "Gabe ma hamu, saur matua bulung! Bahagia selalu ya Dimar & Septian 🤍", at: Date.now() - 5 * 36e5 },
   ];
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (_) { return []; } };
-  const save = (list) => { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (_) {} };
+  const save = (l) => { try { localStorage.setItem(KEY, JSON.stringify(l)); } catch (_) {} };
   const ago = (t) => {
     const s = (Date.now() - t) / 1000;
     if (s < 60) return "baru saja";
@@ -184,73 +208,87 @@
     return Math.floor(s / 86400) + " hari lalu";
   };
   function renderWishes() {
-    const list = load().concat(seed).sort((a, b) => b.at - a.at);
+    const list = load().concat(seed).sort((x, y) => y.at - x.at);
     $("#wishCount").textContent = list.length;
     $("#statHadir").textContent = list.filter((w) => w.attend === "Hadir").length;
-    $("#wishes").innerHTML = list.map((w) =>
-      `<li><div class="who">${esc(w.name)} <span class="badge">${esc(w.attend)}</span></div>
-       <p>${esc(w.message)}</p><span class="when">${ago(w.at)}</span></li>`
-    ).join("");
+    $("#wishes").innerHTML = list.map((w, i) =>
+      `<li style="animation-delay:${Math.min(i, 8) * 0.06}s"><div class="who">${esc(w.name)}<span class="badge-s">${esc(w.attend)}</span></div>
+       <p>${esc(w.message)}</p><span class="when">${ago(w.at)}</span></li>`).join("");
   }
   renderWishes();
-
   $("#rsvpForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const f = new FormData(e.target);
-    const w = {
-      name: f.get("name").trim(), attend: f.get("attend"), guests: f.get("guests"),
-      message: f.get("message").trim(), at: Date.now(),
-    };
+    const w = { name: f.get("name").trim(), attend: f.get("attend"), guests: f.get("guests"), message: f.get("message").trim(), at: Date.now() };
     if (!w.name || !w.message) return;
     const list = load(); list.push(w); save(list); renderWishes();
     e.target.message.value = "";
-    toast("Terima kasih atas doa & ucapannya 🤍");
+    toast("Mauliate godang atas doanya! 🤍");
+    burst();
     if (C.whatsapp) {
-      const text = `Assalamualaikum, saya ${w.name} ingin konfirmasi kehadiran di pernikahan ${C.couple.short}.\n\nKehadiran: ${w.attend}\nJumlah tamu: ${w.guests}\n\nUcapan: ${w.message}`;
+      const text = `Syalom/Horas, saya ${w.name} konfirmasi kehadiran di pernikahan ${C.couple.short}.\n\nKehadiran: ${w.attend}\nJumlah: ${w.guests} orang\n\nUcapan: ${w.message}`;
       window.open(`https://wa.me/${C.whatsapp}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
-      $("#formNote").textContent = "Konfirmasi juga dikirim melalui WhatsApp.";
+      $("#formNote").textContent = "Konfirmasi juga dikirim lewat WhatsApp.";
     }
   });
 
-  // ---------- reveal on scroll ----------
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
-  }, { threshold: 0.12 });
+  // ---------- reveal ----------
+  const io = new IntersectionObserver((en) => en.forEach((x) => {
+    if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); }
+  }), { threshold: 0.15 });
   $$(".reveal").forEach((el) => io.observe(el));
 
-  // ---------- active nav ----------
+  // ---------- navigasi aktif & progress ----------
   const links = $$(".dock a");
-  const sections = links.map((a) => $(a.getAttribute("href")));
-  const navIo = new IntersectionObserver((entries) => {
-    entries.forEach((en) => {
-      if (en.isIntersecting) links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
-    });
-  }, { rootMargin: "-45% 0px -50% 0px" });
-  sections.forEach((s) => s && navIo.observe(s));
+  const navIo = new IntersectionObserver((en) => en.forEach((x) => {
+    if (x.isIntersecting) links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + x.target.id));
+  }), { rootMargin: "-45% 0px -50% 0px" });
+  links.forEach((a) => { const s = $(a.getAttribute("href")); if (s) navIo.observe(s); });
+  const bar = $("#progressBar");
+  addEventListener("scroll", () => {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+  }, { passive: true });
 
-  // ---------- falling petals ----------
-  function startPetals() {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const cv = $("#petals"), ctx = cv.getContext("2d");
-    let W, H; const dpr = Math.min(devicePixelRatio || 1, 2);
-    const resize = () => { W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
-    resize(); addEventListener("resize", resize);
-    const colors = ["#e8d3a2", "#c9a45c", "#f6e7e1", "#ffffff"];
-    const petals = Array.from({ length: 22 }, () => mk(true));
-    function mk(init) {
-      return { x: Math.random() * W, y: init ? Math.random() * H : -20, r: 4 + Math.random() * 6, vy: .4 + Math.random() * .9,
-        vx: -.3 + Math.random() * .6, a: Math.random() * 6.28, va: -.02 + Math.random() * .04, sway: Math.random() * 6.28,
-        c: colors[(Math.random() * colors.length) | 0], o: .35 + Math.random() * .45 };
-    }
-    (function loop() {
-      ctx.clearRect(0, 0, W, H);
-      petals.forEach((p, i) => {
-        p.sway += .02; p.x += p.vx + Math.sin(p.sway) * .5; p.y += p.vy; p.a += p.va;
-        if (p.y > H + 20) petals[i] = mk(false);
-        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.globalAlpha = p.o; ctx.fillStyle = p.c;
-        ctx.beginPath(); ctx.ellipse(0, 0, p.r, p.r * .55, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-      });
-      requestAnimationFrame(loop);
-    })();
+  // ---------- confetti retro ----------
+  const cv = $("#confetti"), ctx = cv.getContext("2d");
+  const COLORS = ["#c8312b", "#f2b33d", "#2f7d79", "#221c18", "#e8743b", "#f6b9a8"];
+  let W, H, bits = [], running = false;
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  const resize = () => { W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  resize(); addEventListener("resize", resize);
+  const mk = (burstMode) => ({
+    x: burstMode ? W / 2 + (Math.random() - 0.5) * 80 : Math.random() * W,
+    y: burstMode ? H * 0.45 : -20,
+    vx: burstMode ? (Math.random() - 0.5) * 14 : (Math.random() - 0.5) * 0.6,
+    vy: burstMode ? -Math.random() * 13 - 3 : 0.6 + Math.random() * 0.9,
+    r: 4 + Math.random() * 6, a: Math.random() * 6.3, va: (Math.random() - 0.5) * 0.15,
+    shape: (Math.random() * 4) | 0, c: COLORS[(Math.random() * COLORS.length) | 0], burst: burstMode, life: 1,
+  });
+  function draw(p) {
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.globalAlpha = p.burst ? p.life : 0.55;
+    ctx.fillStyle = ctx.strokeStyle = p.c; ctx.lineWidth = 2.2; ctx.lineCap = "round";
+    ctx.beginPath();
+    if (p.shape === 0) { ctx.arc(0, 0, p.r * 0.6, 0, 6.3); ctx.fill(); }
+    else if (p.shape === 1) { ctx.fillRect(-p.r * 0.7, -p.r * 0.35, p.r * 1.4, p.r * 0.7); }
+    else if (p.shape === 2) { for (let k = 0; k < 4; k++) { ctx.lineTo(Math.cos(k * 1.57) * p.r, Math.sin(k * 1.57) * p.r); ctx.lineTo(Math.cos(k * 1.57 + .78) * p.r * .35, Math.sin(k * 1.57 + .78) * p.r * .35); } ctx.closePath(); ctx.fill(); }
+    else { ctx.moveTo(-p.r, 0); ctx.quadraticCurveTo(-p.r / 2, -p.r, 0, 0); ctx.quadraticCurveTo(p.r / 2, p.r, p.r, 0); ctx.stroke(); }
+    ctx.restore();
+  }
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    bits.forEach((p, i) => {
+      if (p.burst) { p.vy += 0.32; p.vx *= 0.985; p.life -= 0.006; }
+      else { p.x += Math.sin((p.y + i * 40) / 60) * 0.4; }
+      p.x += p.vx; p.y += p.vy; p.a += p.va; draw(p);
+    });
+    bits = bits.filter((p) => p.burst ? p.life > 0 && p.y < H + 30 : p.y < H + 30);
+    while (bits.filter((p) => !p.burst).length < 16) bits.push(mk(false));
+    requestAnimationFrame(loop);
+  }
+  function burst() {
+    if (reduced) return;
+    for (let i = 0; i < 90; i++) bits.push(mk(true));
+    if (!running) { running = true; loop(); }
   }
 })();
