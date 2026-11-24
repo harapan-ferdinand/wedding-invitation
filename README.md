@@ -1,4 +1,4 @@
-# Undangan Pernikahan Digital — Dimar & Septian
+# Undangan Pernikahan Digital — Andreas & Juwi
 
 Undangan web statis (HTML/CSS/JS murni, tanpa build) bertema **Batak Kristen** dengan gaya **retro-vintage** cerah:
 motif gorga & ulos, sunburst, perangko, tiket, polaroid, dan film strip.

@@ -22,6 +22,7 @@
     dateLong: `${P.day}, ${P.date} ${P.month} ${P.year}`,
     dateShort: `${P.day.toUpperCase()} · ${P.date} ${P.month.toUpperCase()} ${P.year}`,
     dateDots: `${pad(P.date)}.${pad(P.m + 1)}.${String(P.year).slice(2)}`,
+    ribbon: `Horas! ✦ Syalom ✦ Mauliate Godang ✦ ${C.couple.short} ✦ ${pad(P.date)} · ${pad(P.m + 1)} · ${P.year} ✦`,
   };
   $$("[data-bind]").forEach((el) => { if (binds[el.dataset.bind]) el.textContent = binds[el.dataset.bind]; });
   $("#badgeText").textContent = `HORAS · ${binds.dateDots} · SAVE THE DATE · ${binds.dateDots} · `;
@@ -82,7 +83,7 @@
 
   // ---------- kalender & peta ----------
   const ev = C.events[0];
-  const mapsLink = (e) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.mapsQuery || e.venue)}`;
+  const mapsLink = (e) => e.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.mapsQuery || e.venue)}`;
   const gcal = (e) => {
     const f = (iso) => new Date(iso).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
     return "https://calendar.google.com/calendar/render?" + new URLSearchParams({
@@ -92,6 +93,29 @@
   };
   $("#calBtn").href = gcal(ev);
   $("#mapEmbed").src = `https://maps.google.com/maps?q=${encodeURIComponent(ev.mapsQuery || ev.venue)}&z=15&output=embed`;
+  $("#mapsBtn").href = mapsLink(ev);
+  $("#trVenue").textContent = ev.venue;
+  $("#trAddr").textContent = ev.address;
+  $("#copyMaps").addEventListener("click", () => {
+    const t = mapsLink(ev);
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(
+      () => toast("Link lokasi tersalin ✓"), () => window.prompt("Salin link lokasi:", t));
+  });
+  // mobil kecil berjalan mengikuti jalur rute
+  (function drive() {
+    const car = $(".r-car"), path = $("#routePath"), svg = path.ownerSVGElement;
+    if (!car || reduced) return;
+    const len = path.getTotalLength();
+    let t0 = null;
+    (function step(ts) {
+      t0 = t0 || ts;
+      const k = ((ts - t0) / 5200) % 1, pt = path.getPointAtLength(k * len);
+      const box = svg.getBoundingClientRect(), host = svg.parentElement.getBoundingClientRect();
+      const vb = svg.viewBox.baseVal;
+      car.style.transform = `translate(${box.left - host.left + (pt.x / vb.width) * box.width - 12}px, ${box.top - host.top + (pt.y / vb.height) * box.height - 18}px)`;
+      requestAnimationFrame(step);
+    })(performance.now());
+  })();
 
   // ---------- ayat ----------
   $("#verseText").textContent = `“${C.verse.text}”`;
@@ -196,7 +220,7 @@
   const KEY = "wishes:" + C.couple.short;
   const seed = [
     { name: "Keluarga Besar", attend: "Hadir", message: "Selamat menempuh hidup baru! Kiranya Tuhan Yesus memberkati rumah tangga kalian. Horas!", at: Date.now() - 2 * 864e5 },
-    { name: "Sahabat", attend: "Hadir", message: "Gabe ma hamu, saur matua bulung! Bahagia selalu ya Dimar & Septian 🤍", at: Date.now() - 5 * 36e5 },
+    { name: "Sahabat", attend: "Hadir", message: `Gabe ma hamu, saur matua bulung! Bahagia selalu ya ${C.couple.short} 🤍`, at: Date.now() - 5 * 36e5 },
   ];
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (_) { return []; } };
   const save = (l) => { try { localStorage.setItem(KEY, JSON.stringify(l)); } catch (_) {} };

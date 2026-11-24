@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>The Wedding of Dimar & Septian</title>
+  <title>The Wedding of Andreas & Juwi</title>
   <meta name="description" content="Syalom & Horas! Dengan sukacita kami mengundang Anda ke resepsi pernikahan kami." />
-  <meta property="og:title" content="The Wedding of Dimar & Septian" />
-  <meta property="og:description" content="Kamis, 23 Desember 2027 · Wisma Marindal, Medan" />
+  <meta property="og:title" content="The Wedding of Andreas & Juwi" />
+  <meta property="og:description" content="Rabu, 23 Desember 2026 · Wisma Marindal, Medan" />
   <meta name="theme-color" content="#c8312b" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,7 +43,7 @@
       <div class="env-back"></div>
       <div class="letter">
         <p class="mono small">THE WEDDING OF</p>
-        <p class="letter-names">Dimar <i>&amp;</i> Septian</p>
+        <p class="letter-names"><span data-bind="groom.nickname">Andreas</span> <i>&amp;</i> <span data-bind="bride.nickname">Juwi</span></p>
         <p class="mono small" data-bind="dateShort"></p>
       </div>
       <div class="env-front">
@@ -76,9 +76,9 @@
       <div class="hero-inner">
         <p class="pill reveal"><svg class="ico"><use href="#cross"/></svg> Undangan Pernikahan Kudus</p>
         <h1 class="hero-names reveal">
-          <span class="n1" data-bind="groom.nickname">Septian</span>
+          <span class="n1" data-bind="groom.nickname">Andreas</span>
           <span class="amp">&amp;</span>
-          <span class="n2" data-bind="bride.nickname">Dimar</span>
+          <span class="n2" data-bind="bride.nickname">Juwi</span>
         </h1>
         <p class="hero-date reveal" data-bind="dateLong"></p>
         <div class="countdown reveal" id="countdown">
@@ -99,8 +99,8 @@
       </div>
       <div class="ribbon tilt" aria-hidden="true">
         <div class="track">
-          <span>Horas! ✦ Syalom ✦ Mauliate Godang ✦ Dimar &amp; Septian ✦ 23 · 12 · 2027 ✦</span>
-          <span>Horas! ✦ Syalom ✦ Mauliate Godang ✦ Dimar &amp; Septian ✦ 23 · 12 · 2027 ✦</span>
+          <span data-bind="ribbon">Horas! ✦ Syalom ✦ Mauliate Godang ✦ Andreas &amp; Juwi ✦ 23 · 12 · 2026 ✦</span>
+          <span data-bind="ribbon">Horas! ✦ Syalom ✦ Mauliate Godang ✦ Andreas &amp; Juwi ✦ 23 · 12 · 2026 ✦</span>
         </div>
       </div>
     </section>
@@ -133,9 +133,42 @@
       <p class="kicker reveal">— Save the Date —</p>
       <h2 class="display reveal">Resepsi Pernikahan</h2>
       <div id="events"></div>
-      <div class="map-frame reveal">
+      <div class="treasure reveal pop">
         <span class="tape t1"></span><span class="tape t2"></span>
-        <iframe id="mapEmbed" title="Peta lokasi acara" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="tr-head">
+          <svg class="compass" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="46" class="c-ring"/>
+            <circle cx="50" cy="50" r="38" class="c-dash"/>
+            <g class="c-rose">
+              <path d="M50 8l7 42-7 42-7-42z" class="c-ns"/>
+              <path d="M8 50l42-7 42 7-42 7z" class="c-ew"/>
+              <path d="M50 8l7 42h-7z" class="c-n"/>
+            </g>
+            <circle cx="50" cy="50" r="4" class="c-dot"/>
+            <text x="50" y="7" class="c-txt">U</text>
+          </svg>
+          <div>
+            <p class="kicker">Peta Menuju Bahagia</p>
+            <h3 id="trVenue">Wisma Marindal</h3>
+            <p class="tr-addr" id="trAddr"></p>
+          </div>
+        </div>
+        <div class="route" aria-hidden="true">
+          <span class="r-start">🏠<small>Rumahmu</small></span>
+          <svg viewBox="0 0 300 40" preserveAspectRatio="none"><path id="routePath" d="M4 30C60 4 90 38 150 20S240 4 296 22"/></svg>
+          <span class="r-car">🚗</span>
+          <span class="r-end">💒<small>Pesta!</small></span>
+        </div>
+        <div class="tr-map">
+          <iframe id="mapEmbed" title="Peta lokasi Wisma Marindal" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <div class="folds" aria-hidden="true"></div>
+          <span class="tr-sticker" aria-hidden="true">📍 Di sini kita<br>berpesta!</span>
+        </div>
+        <div class="tr-actions">
+          <a class="btn btn-red" id="mapsBtn" target="_blank" rel="noopener">🧭 Buka Google Maps</a>
+          <button class="btn btn-mustard" type="button" id="copyMaps">🔗 Salin Link Lokasi</button>
+        </div>
+        <p class="tr-note mono">Tip: kirim link lokasi ke sopir / ojek online kamu</p>
       </div>
     </section>
 
@@ -207,7 +240,7 @@
         <p class="reveal">Mohon maaf, undangan disampaikan melalui pesan ini. Terima kasih atas perhatian dan doanya.</p>
         <h2 class="display big reveal">Mauliate Godang!</h2>
         <p class="hand reveal">Kami yang berbahagia,</p>
-        <p class="closing-names reveal" data-bind="couple.short">Dimar &amp; Septian</p>
+        <p class="closing-names reveal" data-bind="couple.short">Andreas &amp; Juwi</p>
         <p class="mono small reveal">beserta keluarga besar</p>
       </div>
       <div class="ribbon" aria-hidden="true">

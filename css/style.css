@@ -330,11 +330,66 @@ body:not(.locked) #main { opacity: 1; transition: opacity .6s; }
 .ticket .actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .stub-text { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--mono); font-weight: 700; letter-spacing: .3em; font-size: .85rem; color: var(--red); }
 .barcode { width: 46px; height: 70px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 7px, transparent 7px 8px, var(--ink) 8px 9px, transparent 9px 12px); }
-.map-frame {
-  position: relative; max-width: 680px; margin: 46px auto 0; padding: 10px; background: #fff;
-  box-shadow: 6px 6px 0 var(--ink); transform: rotate(-1.2deg);
+/* ---------- peta menuju bahagia ---------- */
+.treasure {
+  position: relative; max-width: 720px; margin: 54px auto 0; padding: 22px 18px 24px; text-align: left;
+  background: #f9e6bf; border: 2px solid var(--ink); box-shadow: 8px 8px 0 var(--ink);
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(255,255,255,.55), transparent 50%),
+    radial-gradient(ellipse at 90% 90%, rgba(125,31,31,.12), transparent 55%),
+    repeating-linear-gradient(0deg, transparent 0 28px, rgba(125,31,31,.05) 28px 29px),
+    repeating-linear-gradient(90deg, transparent 0 28px, rgba(125,31,31,.05) 28px 29px);
+  transform: rotate(-.8deg);
 }
-.map-frame iframe { display: block; width: 100%; height: 300px; border: 0; filter: sepia(.3) saturate(1.1); }
+.treasure::before { /* ulos binding on the left edge */
+  content: ""; position: absolute; top: -2px; bottom: -2px; left: -14px; width: 12px; background: var(--ulos);
+  background-size: 100% 46px; border: 2px solid var(--ink); border-right: 0;
+  background-image: repeating-linear-gradient(180deg, var(--maroon) 0 14px, var(--ink) 14px 18px, var(--paper) 18px 20px, var(--mustard) 20px 23px, var(--red) 23px 40px, var(--ink) 40px 46px);
+}
+.tr-head { display: flex; align-items: center; gap: 14px; }
+.tr-head h3 { font-weight: 900; font-size: 1.7rem; line-height: 1.05; color: var(--red); font-variation-settings: "SOFT" 100, "WONK" 1; }
+.tr-head .kicker { font-size: .72rem; }
+.tr-addr { font-size: .95rem; color: var(--muted); }
+.compass { flex: 0 0 74px; width: 74px; height: 74px; filter: drop-shadow(2px 2px 0 var(--ink)); }
+.compass .c-ring { fill: var(--paper); stroke: var(--ink); stroke-width: 3; }
+.compass .c-dash { fill: none; stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 2 4; }
+.compass .c-rose { transform-origin: 50px 50px; animation: needle 6s ease-in-out infinite; }
+.compass .c-ns { fill: var(--ink); } .compass .c-ew { fill: var(--mustard); stroke: var(--ink); stroke-width: 1; }
+.compass .c-n { fill: var(--red); } .compass .c-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
+.compass .c-txt { font: 700 9px var(--mono); text-anchor: middle; fill: var(--red); }
+
+.route { position: relative; display: flex; align-items: center; gap: 6px; margin: 16px 0 12px; height: 54px; }
+.route svg { flex: 1; min-width: 0; width: 100%; height: 40px; overflow: visible; }
+.route path { fill: none; stroke: var(--red); stroke-width: 3; stroke-dasharray: 7 7; stroke-linecap: round; animation: march 1.2s linear infinite; vector-effect: non-scaling-stroke; }
+.r-start, .r-end { display: grid; justify-items: center; font-size: 1.6rem; line-height: 1; z-index: 1; }
+.r-start small, .r-end small { font-family: var(--hand); font-size: 1rem; color: var(--ink); }
+.r-end { animation: bob 1.6s ease-in-out infinite; }
+.r-car { position: absolute; left: 0; top: 0; font-size: 1.4rem; offset-rotate: 0deg; z-index: 2; }
+
+.tr-map {
+  position: relative; border: 3px solid var(--ink); background: var(--sand); overflow: hidden;
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%;
+          mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%;
+  border-bottom: 0;
+}
+.tr-map iframe { display: block; width: 100%; height: 340px; border: 0; filter: sepia(.18) saturate(1.05); }
+.folds {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
+  background:
+    linear-gradient(90deg, transparent 32%, rgba(90,50,20,.16) 33.3%, transparent 34.6%, transparent 65.4%, rgba(90,50,20,.16) 66.6%, transparent 68%),
+    linear-gradient(180deg, transparent 48%, rgba(90,50,20,.14) 50%, transparent 52%),
+    radial-gradient(ellipse at center, transparent 60%, rgba(125,60,20,.18));
+}
+.tr-sticker {
+  position: absolute; right: 10px; top: 10px; padding: 6px 10px; font-family: var(--hand); font-size: 1.15rem; line-height: 1.05;
+  background: var(--mustard); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); transform: rotate(4deg);
+  pointer-events: none; animation: bob 2.4s ease-in-out infinite;
+}
+.tr-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+.tr-actions .btn { flex: 1 1 200px; }
+.tr-note { margin-top: 12px; font-size: .72rem; color: var(--muted); text-align: center; }
+@keyframes needle { 0%,100% { transform: rotate(-18deg); } 50% { transform: rotate(14deg); } }
+@keyframes march { to { stroke-dashoffset: -28; } }
 
 /* ---------- story postcards ---------- */
 .swipe-hint { margin-bottom: 10px; animation: nudge 1.6s ease-in-out infinite; }
