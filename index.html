@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>The Wedding of Andreas & Juwi</title>
+  <meta name="description" content="Syalom & Horas! Dengan sukacita kami mengundang Anda ke resepsi pernikahan kami." />
+  <meta property="og:title" content="The Wedding of Andreas & Juwi" />
+  <meta property="og:description" content="Rabu, 23 Desember 2026 · Wisma Marindal, Medan" />
+  <meta name="theme-color" content="#c8312b" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Courier+Prime:wght@400;700&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="locked">
+
+  <!-- shared SVG symbols -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="gorga" viewBox="0 0 100 100">
+        <g fill="none" stroke-linecap="round">
+          <circle cx="50" cy="50" r="46" stroke="currentColor" stroke-width="3"/>
+          <circle cx="50" cy="50" r="38" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 4"/>
+          <path d="M50 50a4 4 0 1 1 8 0a8 8 0 1 1-16 0a12 12 0 1 1 24 0a16 16 0 1 1-32 0a20 20 0 1 1 40 0" stroke="currentColor" stroke-width="3"/>
+        </g>
+      </symbol>
+      <symbol id="spiral" viewBox="0 0 80 40">
+        <path d="M20 20a3 3 0 1 1 6 0a6 6 0 1 1-12 0a9 9 0 1 1 18 0C32 32 48 32 48 20a12 12 0 0 1 24 0a9 9 0 0 1-18 0a6 6 0 0 1 12 0a3 3 0 0 1-6 0" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="cross" viewBox="0 0 24 24"><path d="M10 2h4v6h6v4h-6v10h-4V12H4V8h6z" fill="currentColor"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+  <!-- ================= COVER: ENVELOPE ================= -->
+  <section id="cover" class="cover" aria-label="Sampul undangan">
+    <div class="sunburst" aria-hidden="true"></div>
+    <p class="cover-kicker">Syalom &amp; Horas!</p>
+    <div class="envelope" id="envelope">
+      <div class="env-back"></div>
+      <div class="letter">
+        <p class="mono small">THE WEDDING OF</p>
+        <p class="letter-names"><span data-bind="groom.nickname">Andreas</span> <i>&amp;</i> <span data-bind="bride.nickname">Juwi</span></p>
+        <p class="mono small" data-bind="dateShort"></p>
+      </div>
+      <div class="env-front">
+        <div class="stamp" aria-hidden="true">
+          <svg><use href="#gorga"/></svg>
+          <span>HORAS</span>
+        </div>
+        <div class="postmark" aria-hidden="true">MEDAN · <span data-bind="dateDots"></span> · POS CINTA ·</div>
+        <div class="address">
+          <p class="mono small">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+          <p class="guest-name" id="guestName">Tamu Undangan</p>
+          <p class="hand small">di tempat</p>
+        </div>
+      </div>
+      <div class="env-flap"></div>
+      <button id="openBtn" class="seal" aria-label="Buka undangan">
+        <svg><use href="#gorga"/></svg>
+      </button>
+    </div>
+    <p class="cover-hint hand">Ketuk segel untuk membuka undangan ↑</p>
+  </section>
+
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <main id="main">
+
+    <!-- ================= HERO ================= -->
+    <section id="home" class="hero">
+      <div class="sunburst slow" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <p class="pill reveal"><svg class="ico"><use href="#cross"/></svg> Undangan Pernikahan Kudus</p>
+        <h1 class="hero-names reveal">
+          <span class="n1" data-bind="groom.nickname">Andreas</span>
+          <span class="amp">&amp;</span>
+          <span class="n2" data-bind="bride.nickname">Juwi</span>
+        </h1>
+        <p class="hero-date reveal" data-bind="dateLong"></p>
+        <div class="countdown reveal" id="countdown">
+          <div class="flip"><b id="cd-d">0</b><small>Hari</small></div>
+          <div class="flip"><b id="cd-h">00</b><small>Jam</small></div>
+          <div class="flip"><b id="cd-m">00</b><small>Menit</small></div>
+          <div class="flip"><b id="cd-s">00</b><small>Detik</small></div>
+        </div>
+        <a id="calBtn" class="btn btn-ink reveal" target="_blank" rel="noopener">＋ Simpan ke Kalender</a>
+      </div>
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 200 200">
+          <defs><path id="circ" d="M100 100m-74 0a74 74 0 1 1 148 0a74 74 0 1 1-148 0"/></defs>
+          <circle cx="100" cy="100" r="96" class="badge-bg"/>
+          <text><textPath href="#circ" id="badgeText">HORAS · SAVE THE DATE · HORAS · SAVE THE DATE ·</textPath></text>
+          <use href="#gorga" x="62" y="62" width="76" height="76" class="badge-core"/>
+        </svg>
+      </div>
+      <div class="ribbon tilt" aria-hidden="true">
+        <div class="track">
+          <span data-bind="ribbon">Horas! ✦ Syalom ✦ Mauliate Godang ✦ Andreas &amp; Juwi ✦ 23 · 12 · 2026 ✦</span>
+          <span data-bind="ribbon">Horas! ✦ Syalom ✦ Mauliate Godang ✦ Andreas &amp; Juwi ✦ 23 · 12 · 2026 ✦</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SALAM & AYAT ================= -->
+    <section class="section salam">
+      <div class="gorga-row" aria-hidden="true"></div>
+      <h2 class="display reveal">Syalom <i>&amp;</i> Horas!</h2>
+      <p class="reveal">Dengan penuh sukacita dan atas kasih karunia Tuhan Yesus Kristus, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.</p>
+      <figure class="verse reveal pop">
+        <svg class="verse-cross"><use href="#cross"/></svg>
+        <blockquote id="verseText"></blockquote>
+        <figcaption id="verseRef"></figcaption>
+      </figure>
+    </section>
+
+    <!-- ================= MEMPELAI ================= -->
+    <section id="couple" class="section couple">
+      <p class="kicker reveal">— Mempelai —</p>
+      <h2 class="display reveal">Dua Hati, Satu Kasih</h2>
+      <div class="couple-grid">
+        <article class="person" id="groom"></article>
+        <div class="couple-amp reveal" aria-hidden="true">&amp;</div>
+        <article class="person" id="bride"></article>
+      </div>
+    </section>
+
+    <!-- ================= ACARA ================= -->
+    <section id="event" class="section event">
+      <p class="kicker reveal">— Save the Date —</p>
+      <h2 class="display reveal">Resepsi Pernikahan</h2>
+      <div id="events"></div>
+      <div class="treasure reveal pop">
+        <span class="tape t1"></span><span class="tape t2"></span>
+        <div class="tr-head">
+          <svg class="compass" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="46" class="c-ring"/>
+            <circle cx="50" cy="50" r="38" class="c-dash"/>
+            <g class="c-rose">
+              <path d="M50 8l7 42-7 42-7-42z" class="c-ns"/>
+              <path d="M8 50l42-7 42 7-42 7z" class="c-ew"/>
+              <path d="M50 8l7 42h-7z" class="c-n"/>
+            </g>
+            <circle cx="50" cy="50" r="4" class="c-dot"/>
+            <text x="50" y="7" class="c-txt">U</text>
+          </svg>
+          <div>
+            <p class="kicker">Peta Menuju Bahagia</p>
+            <h3 id="trVenue">Wisma Marindal</h3>
+            <p class="tr-addr" id="trAddr"></p>
+          </div>
+        </div>
+        <a class="tr-map" id="mapLink" target="_blank" rel="noopener" aria-label="Peta ilustrasi lokasi Wisma Marindal — ketuk untuk membuka Google Maps">
+          <svg class="art-map" viewBox="0 0 600 400" role="img" aria-hidden="true">
+            <defs>
+              <pattern id="mgrid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#c9a467" stroke-opacity=".25"/></pattern>
+              <pattern id="sawah" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 8L8 0" stroke="#7aa35a" stroke-width="1.4"/></pattern>
+              <path id="carRoute" d="M78 318C130 300 175 262 232 246S290 228 300 222S352 220 384 226"/>
+            </defs>
+            <rect width="600" height="400" fill="#f7e5bb"/>
+            <rect width="600" height="400" fill="url(#mgrid)"/>
+            <!-- bukit / kontur -->
+            <g fill="none" stroke="#b98a4a" stroke-opacity=".35" stroke-width="1.5">
+              <path d="M20 90c40-40 110-40 140 0s-20 60-70 50-90-20-70-50z"/>
+              <path d="M40 92c25-22 75-22 95 2s-15 34-50 28-60-12-45-30z"/>
+              <path d="M470 60c30-30 90-20 100 15s-40 45-75 35-45-25-25-50z"/>
+            </g>
+            <!-- sawah -->
+            <g stroke="#5d7f43" stroke-width="1.5">
+              <rect x="430" y="300" width="56" height="40" rx="4" fill="#cfe3a6"/><rect x="430" y="300" width="56" height="40" rx="4" fill="url(#sawah)"/>
+              <rect x="40" y="200" width="70" height="44" rx="4" fill="#cfe3a6"/><rect x="40" y="200" width="70" height="44" rx="4" fill="url(#sawah)"/>
+            </g>
+            <!-- sungai -->
+            <path d="M610 130C540 150 520 110 470 130S430 190 470 230S520 300 480 330S450 380 470 410" fill="none" stroke="#2f7d79" stroke-opacity=".35" stroke-width="18" stroke-linecap="round"/>
+            <path class="river-flow" d="M610 130C540 150 520 110 470 130S430 190 470 230S520 300 480 330S450 380 470 410" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2" stroke-dasharray="6 14"/>
+            <!-- jalan -->
+            <g fill="none" stroke-linecap="round">
+              <path d="M300 -10C290 80 318 150 300 222S282 330 300 410" stroke="#221c18" stroke-width="24"/>
+              <path d="M300 -10C290 80 318 150 300 222S282 330 300 410" stroke="#fff9ee" stroke-width="18"/>
+              <path d="M300 -10C290 80 318 150 300 222S282 330 300 410" stroke="#f2b33d" stroke-width="2" stroke-dasharray="10 10"/>
+              <path d="M-10 312C60 318 110 290 160 268S250 236 300 222S350 220 390 226" stroke="#221c18" stroke-width="16"/>
+              <path d="M-10 312C60 318 110 290 160 268S250 236 300 222S350 220 390 226" stroke="#fff9ee" stroke-width="11"/>
+            </g>
+            <!-- pohon & rumah kecil -->
+            <g class="trees">
+              <g transform="translate(200 120)"><rect x="-2" y="0" width="4" height="12" fill="#7d4a1f"/><circle r="12" fill="#5d7f43" stroke="#221c18" stroke-width="2"/></g>
+              <g transform="translate(232 150)"><rect x="-2" y="0" width="4" height="10" fill="#7d4a1f"/><circle r="9" fill="#7aa35a" stroke="#221c18" stroke-width="2"/></g>
+              <g transform="translate(380 120)"><rect x="-2" y="0" width="4" height="12" fill="#7d4a1f"/><circle r="12" fill="#7aa35a" stroke="#221c18" stroke-width="2"/></g>
+              <g transform="translate(520 240)"><rect x="-2" y="0" width="4" height="12" fill="#7d4a1f"/><circle r="11" fill="#5d7f43" stroke="#221c18" stroke-width="2"/></g>
+              <g transform="translate(160 350)"><rect x="-2" y="0" width="4" height="12" fill="#7d4a1f"/><circle r="12" fill="#5d7f43" stroke="#221c18" stroke-width="2"/></g>
+              <g transform="translate(370 330)"><rect x="-2" y="0" width="4" height="10" fill="#7d4a1f"/><circle r="9" fill="#7aa35a" stroke="#221c18" stroke-width="2"/></g>
+            </g>
+            <g stroke="#221c18" stroke-width="2">
+              <g transform="translate(150 175)"><rect x="-12" y="-6" width="24" height="16" fill="#fff9ee"/><path d="M-16-6L0-18 16-6z" fill="#e8743b"/></g>
+              <g transform="translate(240 320)"><rect x="-12" y="-6" width="24" height="16" fill="#fff9ee"/><path d="M-16-6L0-18 16-6z" fill="#2f7d79"/></g>
+              <g transform="translate(360 290)"><rect x="-10" y="-5" width="20" height="14" fill="#fff9ee"/><path d="M-14-5L0-16 14-5z" fill="#c8312b"/></g>
+            </g>
+            <!-- awan -->
+            <g class="cloud" fill="#fff9ee" stroke="#221c18" stroke-width="2">
+              <path d="M60 40a14 14 0 0 1 26-6a12 12 0 0 1 20 10h-56a10 10 0 0 1 10-4z"/>
+            </g>
+            <g class="cloud c2" fill="#fff9ee" stroke="#221c18" stroke-width="2">
+              <path d="M380 30a14 14 0 0 1 26-6a12 12 0 0 1 20 10h-56a10 10 0 0 1 10-4z"/>
+            </g>
+            <!-- arah utara -->
+            <g transform="translate(300 28)">
+              <rect x="-100" y="-16" width="200" height="30" rx="15" fill="#221c18"/>
+              <text class="m-label light" y="5">▲ Pusat Kota Medan</text>
+            </g>
+            <!-- rute -->
+            <use href="#carRoute" class="route-line"/>
+            <g transform="translate(70 322)">
+              <circle r="15" fill="#fff9ee" stroke="#221c18" stroke-width="2"/>
+              <path d="M-8 4V-2L0-9 8-2V4z" fill="#2f7d79" stroke="#221c18" stroke-width="1.6"/>
+              <text class="m-hand" y="36">Rumahmu</text>
+            </g>
+            <g class="car">
+              <g transform="translate(-13 -9)">
+                <rect x="0" y="5" width="26" height="10" rx="4" fill="#c8312b" stroke="#221c18" stroke-width="1.8"/>
+                <path d="M5 5L8 0H18L21 5" fill="#f2b33d" stroke="#221c18" stroke-width="1.8"/>
+                <circle cx="7" cy="16" r="3" fill="#221c18"/><circle cx="19" cy="16" r="3" fill="#221c18"/>
+              </g>
+              <animateMotion dur="6s" repeatCount="indefinite" rotate="auto"><mpath href="#carRoute"/></animateMotion>
+            </g>
+            <!-- lokasi: rumah adat Batak -->
+            <g transform="translate(436 214)">
+              <circle class="ripple" r="30" fill="none" stroke="#c8312b" stroke-width="3"/>
+              <circle class="ripple r2" r="30" fill="none" stroke="#c8312b" stroke-width="3"/>
+              <ellipse cy="40" rx="52" ry="8" fill="#221c18" opacity=".18"/>
+              <g stroke="#221c18" stroke-width="2.2" stroke-linejoin="round">
+                <path d="M-24 22V40M-8 22V40M8 22V40M24 22V40" />
+                <rect x="-34" y="0" width="68" height="24" fill="#7d1f1f"/>
+                <path d="M-34 0h68v8h-68z" fill="#fff9ee"/>
+                <path d="M-30 8l6 8 6-8 6 8 6-8 6 8 6-8 6 8 6-8 6 8 6-8" fill="none" stroke="#fff9ee" stroke-width="2"/>
+                <path d="M-56-58C-30-30 30-30 56-58L40 0H-40z" fill="#c8312b"/>
+                <path d="M-46-44C-20-22 20-22 46-44" fill="none" stroke="#f2b33d" stroke-width="2"/>
+                <path d="M-14-6l14-18 14 18z" fill="#fff9ee"/>
+                <circle cx="0" cy="-12" r="3" fill="#221c18"/>
+              </g>
+              <g class="pin">
+                <path d="M0-74c-14 0-24 10-24 23 0 17 24 37 24 37s24-20 24-37c0-13-10-23-24-23z" fill="#c8312b" stroke="#221c18" stroke-width="2.5"/>
+                <circle cy="-52" r="8" fill="#fff9ee" stroke="#221c18" stroke-width="2"/>
+              </g>
+              <g transform="translate(0 66)">
+                <rect x="-96" y="-18" width="192" height="34" rx="5" fill="#f2b33d" stroke="#221c18" stroke-width="2.2"/>
+                <text class="m-label" y="6" id="mapVenueLabel">Wisma Marindal</text>
+              </g>
+            </g>
+            <!-- kompas -->
+            <g transform="translate(548 352)">
+              <circle r="30" fill="#fff9ee" stroke="#221c18" stroke-width="2.5"/>
+              <g class="needle"><path d="M0-24l6 24-6 24-6-24z" fill="#221c18"/><path d="M0-24l6 24h-6z" fill="#c8312b"/></g>
+              <text class="m-label" y="-33" style="font-size:11px">U</text>
+            </g>
+            <text class="m-small" x="14" y="390">peta ilustrasi · bukan skala · ketuk untuk navigasi</text>
+          </svg>
+        </a>
+        <div class="tr-actions">
+          <a class="btn btn-red" id="mapsBtn" target="_blank" rel="noopener">🧭 Buka Google Maps</a>
+          <button class="btn btn-mustard" type="button" id="copyMaps">🔗 Salin Link Lokasi</button>
+        </div>
+        <p class="tr-note mono">Tip: kirim link lokasi ke sopir / ojek online kamu</p>
+      </div>
+    </section>
+
+    <!-- ================= KISAH ================= -->
+    <section id="story" class="section story">
+      <p class="kicker reveal">— Our Journey —</p>
+      <h2 class="display reveal">Kisah Kami</h2>
+      <p class="hand swipe-hint reveal">geser kartu pos →</p>
+      <div class="postcards" id="postcards"></div>
+    </section>
+
+    <!-- ================= GALERI ================= -->
+    <section id="gallery" class="section gallery">
+      <p class="kicker reveal">— Moments —</p>
+      <h2 class="display reveal">Galeri Kenangan</h2>
+      <div class="film" aria-label="Galeri foto"><div class="film-track" id="film1"></div></div>
+      <div class="film reverse"><div class="film-track" id="film2"></div></div>
+    </section>
+
+    <!-- ================= RSVP ================= -->
+    <section id="rsvp" class="section rsvp">
+      <p class="kicker reveal">— RSVP —</p>
+      <h2 class="display reveal">Kirim Kabar &amp; Doa</h2>
+      <form id="rsvpForm" class="paper reveal" autocomplete="on">
+        <span class="tape t1"></span>
+        <label>Nama
+          <input name="name" id="rsvpName" required maxlength="60" />
+        </label>
+        <div class="row2">
+          <label>Kehadiran
+            <select name="attend" required>
+              <option value="Hadir">Puji Tuhan, Hadir</option>
+              <option value="Tidak Hadir">Maaf, Tidak Bisa Hadir</option>
+              <option value="Masih Ragu">Masih Ragu</option>
+            </select>
+          </label>
+          <label>Jumlah
+            <select name="guests"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+          </label>
+        </div>
+        <label>Ucapan &amp; Doa
+          <textarea name="message" rows="4" maxlength="500" placeholder="Tulis ucapan & doa terbaikmu…" required></textarea>
+        </label>
+        <button class="btn btn-red" type="submit">Kirim ✉</button>
+        <p class="form-note" id="formNote"></p>
+      </form>
+      <div class="wishes-head reveal"><b id="wishCount">0</b> ucapan · <b id="statHadir">0</b> akan hadir</div>
+      <ul class="wishes" id="wishes"></ul>
+    </section>
+
+    <!-- ================= HADIAH ================= -->
+    <section id="gift" class="section gift">
+      <p class="kicker reveal">— Wedding Gift —</p>
+      <h2 class="display reveal">Tanda Kasih</h2>
+      <p class="reveal">Kehadiran dan doa Bapak/Ibu/Saudara/i adalah hadiah terindah bagi kami. Namun apabila ingin memberikan tanda kasih, dapat melalui:</p>
+      <div class="gift-grid" id="gifts"></div>
+      <div class="paper gift-address reveal">
+        <h3>Kirim Kado</h3>
+        <p id="giftAddress"></p>
+        <button class="btn btn-ink small" data-copy-target="giftAddress">Salin Alamat</button>
+      </div>
+    </section>
+
+    <!-- ================= PENUTUP ================= -->
+    <section class="section closing">
+      <div class="sunburst slow" aria-hidden="true"></div>
+      <div class="closing-inner">
+        <p class="reveal">Merupakan suatu kebahagiaan dan kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.</p>
+        <p class="reveal">Mohon maaf, undangan disampaikan melalui pesan ini. Terima kasih atas perhatian dan doanya.</p>
+        <h2 class="display big reveal">Mauliate Godang!</h2>
+        <p class="hand reveal">Kami yang berbahagia,</p>
+        <p class="closing-names reveal" data-bind="couple.short">Andreas &amp; Juwi</p>
+        <p class="mono small reveal">beserta keluarga besar</p>
+      </div>
+      <div class="ribbon" aria-hidden="true">
+        <div class="track">
+          <span>Horas! Horas! Horas! ✦ Tuhan Yesus Memberkati ✦ </span>
+          <span>Horas! Horas! Horas! ✦ Tuhan Yesus Memberkati ✦ </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= NAV & MUSIK ================= -->
+  <nav class="dock" aria-label="Navigasi">
+    <a href="#home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9h-6v-6H9v6H3z"/></svg><span>Home</span></a>
+    <a href="#couple"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6C19 16.5 12 21 12 21z"/></svg><span>Mempelai</span></a>
+    <a href="#event"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4zM4 10h16M8 3v5M16 3v5"/></svg><span>Acara</span></a>
+    <a href="#gallery"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4"/></svg><span>Galeri</span></a>
+    <a href="#rsvp"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Ucapan</span></a>
+    <a href="#gift"><svg viewBox="0 0 24 24"><path d="M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7s-1-4-4-4-2 4 4 4zm0 0s1-4 4-4 2 4-4 4z"/></svg><span>Hadiah</span></a>
+  </nav>
+
+  <button id="musicBtn" class="vinyl" aria-label="Putar / jeda musik">
+    <span class="disc"><span class="label"></span></span>
+    <span class="arm"></span>
+  </button>
+  <audio id="bgm" loop preload="none"></audio>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="lightbox" class="lightbox" hidden><button aria-label="Tutup">×</button><div class="lb-content"></div></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/music.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
