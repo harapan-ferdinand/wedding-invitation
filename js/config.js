@@ -74,8 +74,9 @@ window.WEDDING = {
   // Nomor WhatsApp untuk konfirmasi (format 62xxxx, tanpa +). Kosongkan bila tidak dipakai.
   whatsapp: "",
 
-  // Musik latar: lagu asli "Inggir-Inggir" (dengan vokal, tanpa diedit).
-  // Versi instrumental: "assets/inggir-inggir-instrumental.mp3"
+  // Musik latar: "Back At One" (Brian McKnight), potongan 2:38 s.d. akhir lagu, tanpa diedit.
+  // Pilihan lain: "assets/inggir-inggir.mp3" (lagu asli) atau
+  //               "assets/inggir-inggir-instrumental.mp3" (tanpa vokal).
   // Kosongkan ("") untuk memakai lagu bawaan "Horas Groove" yang disintesis di browser.
-  music: "assets/inggir-inggir.mp3",
+  music: "assets/back-at-one.mp3",
 };
