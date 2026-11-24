@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Undangan Pernikahan Dimar & Septian</title>
+  <meta name="description" content="Dengan memohon rahmat dan ridho Allah SWT, kami mengundang Anda untuk hadir di hari bahagia kami." />
+  <meta property="og:title" content="Undangan Pernikahan Dimar & Septian" />
+  <meta property="og:description" content="Merupakan suatu kebahagiaan bagi kami apabila Anda berkenan hadir dan memberikan doa restu." />
+  <meta name="theme-color" content="#123b33" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="locked">
+
+  <!-- ================= COVER ================= -->
+  <section id="cover" class="cover" aria-label="Sampul undangan">
+    <div class="cover-frame">
+      <div class="ornament ornament-top" aria-hidden="true"></div>
+      <p class="eyebrow">The Wedding of</p>
+      <h1 class="script cover-names"><span data-bind="bride.nickname">Dimar</span><span class="amp">&</span><span data-bind="groom.nickname">Septian</span></h1>
+      <p class="cover-date" data-bind="dateLong"></p>
+      <div class="guest">
+        <p class="guest-label">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+        <p class="guest-name" id="guestName">Tamu Undangan</p>
+        <p class="guest-note">Mohon maaf apabila ada kesalahan penulisan nama dan gelar</p>
+      </div>
+      <button id="openBtn" class="btn btn-gold">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l9 6 9-6M3 7v10h18V7M3 7l9-4 9 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        Buka Undangan
+      </button>
+      <div class="ornament ornament-bottom" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <canvas id="petals" aria-hidden="true"></canvas>
+
+  <main id="main">
+
+    <!-- ================= HERO ================= -->
+    <section id="home" class="hero">
+      <div class="hero-arch">
+        <p class="arabic reveal">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
+        <p class="eyebrow reveal">Walimatul 'Ursy</p>
+        <h2 class="script hero-names reveal" data-bind="couple.short">Dimar & Septian</h2>
+        <p class="hero-date reveal" data-bind="dateLong"></p>
+        <div class="countdown reveal" id="countdown">
+          <div><span id="cd-d">0</span><small>Hari</small></div>
+          <div><span id="cd-h">0</span><small>Jam</small></div>
+          <div><span id="cd-m">0</span><small>Menit</small></div>
+          <div><span id="cd-s">0</span><small>Detik</small></div>
+        </div>
+        <a id="calBtn" class="btn btn-outline reveal" target="_blank" rel="noopener">Simpan ke Kalender</a>
+      </div>
+    </section>
+
+    <!-- ================= SALAM & AYAT ================= -->
+    <section class="section salam">
+      <p class="arabic big reveal">السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</p>
+      <p class="lead reveal">Assalamualaikum warahmatullahi wabarakatuh.</p>
+      <p class="reveal">Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.</p>
+      <blockquote class="ayat reveal">
+        <p class="arabic">وَمِنْ آيٰتِهٖٓ اَنْ خَلَقَ لَكُمْ مِّنْ اَنْفُسِكُمْ اَزْوَاجًا لِّتَسْكُنُوْٓا اِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَّوَدَّةً وَّرَحْمَةً</p>
+        <p>"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang."</p>
+        <cite>QS. Ar-Rum : 21</cite>
+      </blockquote>
+    </section>
+
+    <!-- ================= MEMPELAI ================= -->
+    <section id="couple" class="section couple">
+      <p class="eyebrow reveal">Mempelai</p>
+      <h2 class="title reveal">Bismillah, Kami Menikah</h2>
+      <div class="couple-grid">
+        <article class="person reveal" id="bride"></article>
+        <div class="couple-amp script reveal" aria-hidden="true">&</div>
+        <article class="person reveal" id="groom"></article>
+      </div>
+    </section>
+
+    <!-- ================= ACARA ================= -->
+    <section id="event" class="section event">
+      <p class="eyebrow reveal">Save the Date</p>
+      <h2 class="title reveal">Rangkaian Acara</h2>
+      <div class="event-grid" id="events"></div>
+    </section>
+
+    <!-- ================= KISAH ================= -->
+    <section id="story" class="section story">
+      <p class="eyebrow reveal">Our Journey</p>
+      <h2 class="title reveal">Kisah Kami</h2>
+      <ol class="timeline" id="timeline"></ol>
+    </section>
+
+    <!-- ================= GALERI ================= -->
+    <section id="gallery" class="section gallery">
+      <p class="eyebrow reveal">Moments</p>
+      <h2 class="title reveal">Galeri</h2>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </section>
+
+    <!-- ================= RSVP & UCAPAN ================= -->
+    <section id="rsvp" class="section rsvp">
+      <p class="eyebrow reveal">RSVP</p>
+      <h2 class="title reveal">Konfirmasi & Doa Restu</h2>
+      <form id="rsvpForm" class="card form reveal" autocomplete="on">
+        <label>Nama
+          <input name="name" id="rsvpName" required maxlength="60" />
+        </label>
+        <label>Kehadiran
+          <select name="attend" required>
+            <option value="Hadir">Insya Allah Hadir</option>
+            <option value="Tidak Hadir">Mohon Maaf, Tidak Bisa Hadir</option>
+            <option value="Masih Ragu">Masih Ragu</option>
+          </select>
+        </label>
+        <label>Jumlah Tamu
+          <select name="guests">
+            <option>1</option><option>2</option><option>3</option><option>4</option>
+          </select>
+        </label>
+        <label>Ucapan & Doa
+          <textarea name="message" rows="4" maxlength="500" placeholder="Tuliskan ucapan dan doa terbaik…" required></textarea>
+        </label>
+        <button class="btn btn-gold" type="submit">Kirim Ucapan</button>
+        <p class="form-note" id="formNote"></p>
+      </form>
+      <div class="wishes-head reveal">
+        <span id="wishCount">0</span> Ucapan
+        <span class="stat"><b id="statHadir">0</b> hadir</span>
+      </div>
+      <ul class="wishes" id="wishes"></ul>
+    </section>
+
+    <!-- ================= HADIAH ================= -->
+    <section id="gift" class="section gift">
+      <p class="eyebrow reveal">Wedding Gift</p>
+      <h2 class="title reveal">Tanda Kasih</h2>
+      <p class="reveal">Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Namun jika memberi adalah ungkapan tanda kasih, Anda dapat memberi kado secara cashless.</p>
+      <div class="gift-grid" id="gifts"></div>
+      <div class="card gift-address reveal">
+        <h3>Kirim Kado</h3>
+        <p id="giftAddress"></p>
+        <button class="btn btn-small" data-copy-target="giftAddress">Salin Alamat</button>
+      </div>
+    </section>
+
+    <!-- ================= PENUTUP ================= -->
+    <section class="section closing">
+      <p class="reveal">Merupakan suatu kebahagiaan dan kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.</p>
+      <p class="reveal">Mohon maaf, undangan disampaikan melalui pesan ini. Terima kasih atas perhatian dan doanya.</p>
+      <p class="lead reveal">Wassalamualaikum warahmatullahi wabarakatuh.</p>
+      <p class="eyebrow reveal">Kami yang berbahagia,</p>
+      <h2 class="script closing-names reveal" data-bind="couple.short">Dimar & Septian</h2>
+      <p class="footer-note">Dibuat dengan ♥ untuk hari bahagia kami</p>
+    </section>
+  </main>
+
+  <!-- ================= NAV & MUSIK ================= -->
+  <nav class="dock" aria-label="Navigasi">
+    <a href="#home" aria-label="Beranda"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9h-6v-6H9v6H3z"/></svg><span>Home</span></a>
+    <a href="#couple" aria-label="Mempelai"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6C19 16.5 12 21 12 21z"/></svg><span>Mempelai</span></a>
+    <a href="#event" aria-label="Acara"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4zM4 10h16M8 3v5M16 3v5"/></svg><span>Acara</span></a>
+    <a href="#gallery" aria-label="Galeri"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4"/></svg><span>Galeri</span></a>
+    <a href="#rsvp" aria-label="Ucapan"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Ucapan</span></a>
+    <a href="#gift" aria-label="Hadiah"><svg viewBox="0 0 24 24"><path d="M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7s-1-4-4-4-2 4 4 4zm0 0s1-4 4-4 2 4-4 4z"/></svg><span>Hadiah</span></a>
+  </nav>
+  <button id="musicBtn" class="music-btn" aria-label="Putar/hentikan musik" hidden>
+    <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13M9 18a3 3 0 11-6 0 3 3 0 016 0zm12-2a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+  </button>
+  <audio id="bgm" loop preload="none"></audio>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="lightbox" class="lightbox" hidden><button aria-label="Tutup">×</button><div class="lb-content"></div></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
